@@ -7,6 +7,46 @@
         <link rel="stylesheet" href="./style.css" />
     </head>
     <body>
+        <button class="newBook">NEW BOOK</button>
+        <dialog class="newBookDialog">
+            <button class="close">CLOSE</button>
+            <form id="newBookForm">
+                <h3>Enter Book Details</h3>
+                <div>
+                    <label for="author">Author Name:</label>
+                    <input type="text" id="author" required />
+                </div>
+                <div>
+                    <label for="title">Book Title:</label>
+                    <input type="text" id="title" required />
+                </div>
+                <div>
+                    <label for="pages">Number of Pages:</label>
+                    <input type="number" id="pages" min="1" required />
+                </div>
+                <div>
+                    <label for="read">Read or Not:</label>
+                    <input
+                        type="radio"
+                        id="yes"
+                        name="read"
+                        value="Yes"
+                        required
+                    />
+                    <label for="yes">YES</label>
+                    <input
+                        type="radio"
+                        id="no"
+                        name="read"
+                        value="No"
+                        required
+                    />
+                    <label for="no">NO</label>
+                </div>
+                <button type="submit" id="addBook">Add Book</button>
+                <button type="reset">Reset</button>
+            </form>
+        </dialog>
         <script src="./index.js"></script>
     </body>
 </html>
