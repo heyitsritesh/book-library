@@ -39,12 +39,17 @@ function Book(title, author, pages, read) {
     this.read = read;
 }
 
+// Function to Rebuild Table
+function rebuild() {
+    booksDatabase.textContent = '';
+    addToDatabase();
+}
+
 // Form Submit to Create New Book
 newBookForm.addEventListener('submit', event => {
     event.preventDefault(); // Remove default form behaviour
     addBookToLibrary();
-    booksDatabase.textContent = '';
-    addToDatabase();
+    rebuild();
     newBookForm.reset();
 });
 
@@ -88,8 +93,7 @@ function addToDatabase() {
         // Adding Event Listener to each Toggle Button
         readToggleBtn.addEventListener('click', () => {
             myLibrary[index].readToggle();
-            booksDatabase.textContent = '';
-            addToDatabase();
+            rebuild();
         });
 
         // Adding a Delete Button to <td>
@@ -99,11 +103,10 @@ function addToDatabase() {
         delTd.appendChild(delBtn);
         tr.appendChild(delTd);
 
-        // Adding Event Listener to each Toggle Button
+        // Adding Event Listener to each Delete Button
         delBtn.addEventListener('click', () => {
             myLibrary.splice(index, 1);
-            booksDatabase.textContent = '';
-            addToDatabase();
+            rebuild();
         });
 
         // Appending all the elements to the table row
