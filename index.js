@@ -55,17 +55,45 @@ function addBookToLibrary() {
     console.log(myLibrary);
 }
 
+// Read Toggle Prototype
+Book.prototype.readToggle = function () {
+    if (this.read === 'Yes') {
+        return (this.read = 'No');
+    } else {
+        return (this.read = 'Yes');
+    }
+};
+
 // Function to Add Books from Array to Database
 function addToDatabase() {
-    myLibrary.forEach(book => {
+    myLibrary.forEach((book, index) => {
+        // Table row starts
         let tr = document.createElement('tr');
 
+        // Adding each object's value to a <td>
         for (let data in book) {
-            let td = document.createElement('td');
-            td.textContent = book[data];
-            tr.appendChild(td);
+            if (book.hasOwnProperty(data)) {
+                let td = document.createElement('td');
+                td.textContent = book[data];
+                tr.appendChild(td);
+            }
         }
 
+        // Adding a <td> for readToggleBtn
+        let readBtn = document.createElement('td');
+        let readToggleBtn = document.createElement('button');
+        readToggleBtn.textContent = 'Change Read Status';
+        readBtn.appendChild(readToggleBtn);
+        tr.appendChild(readBtn);
+
+        // Adding Event Listener to each Toggle Button
+        readToggleBtn.addEventListener('click', () => {
+            myLibrary[index].readToggle();
+            booksDatabase.textContent = '';
+            addToDatabase();
+        });
+
+        // Appending all the elements to the table row
         booksDatabase.appendChild(tr);
     });
 }
