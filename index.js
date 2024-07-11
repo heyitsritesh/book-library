@@ -52,7 +52,6 @@ newBookForm.addEventListener('submit', event => {
 function addBookToLibrary() {
     let entry = new Book(title.value, author.value, pages.value, readStatus());
     myLibrary.push(entry);
-    console.log(myLibrary);
 }
 
 // Read Toggle Prototype
@@ -79,16 +78,30 @@ function addToDatabase() {
             }
         }
 
-        // Adding a <td> for readToggleBtn
-        let readBtn = document.createElement('td');
+        // Adding a Toggle Button to <td>
+        let readTd = document.createElement('td');
         let readToggleBtn = document.createElement('button');
         readToggleBtn.textContent = 'Change Read Status';
-        readBtn.appendChild(readToggleBtn);
-        tr.appendChild(readBtn);
+        readTd.appendChild(readToggleBtn);
+        tr.appendChild(readTd);
 
         // Adding Event Listener to each Toggle Button
         readToggleBtn.addEventListener('click', () => {
             myLibrary[index].readToggle();
+            booksDatabase.textContent = '';
+            addToDatabase();
+        });
+
+        // Adding a Delete Button to <td>
+        let delTd = document.createElement('td');
+        let delBtn = document.createElement('button');
+        delBtn.textContent = 'Delete';
+        delTd.appendChild(delBtn);
+        tr.appendChild(delTd);
+
+        // Adding Event Listener to each Toggle Button
+        delBtn.addEventListener('click', () => {
+            myLibrary.splice(index, 1);
             booksDatabase.textContent = '';
             addToDatabase();
         });
