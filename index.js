@@ -10,7 +10,9 @@ const author = document.querySelector('#author');
 const title = document.querySelector('#title');
 const pages = document.querySelector('#pages');
 const newBookForm = document.querySelector('#newBookForm');
-const booksDatabase = document.querySelector('.booksDatabase > tbody');
+const booksDatabase = document.querySelector('.booksDatabase');
+const keepOpenCheckbox = document.querySelector('#keepOpen');
+const blurBackground = document.querySelector('.blur-background');
 
 // Fetch Read Status From Radio Buttons
 function readStatus() {
@@ -25,10 +27,12 @@ function readStatus() {
 // Show and Close Modal
 newBook.addEventListener('click', () => {
     newBookDialog.showModal();
+    blurBackground.style.display = 'block';
 });
 
 close.addEventListener('click', () => {
     newBookDialog.close();
+    blurBackground.style.display = 'none';
 });
 
 // Book Constructor
@@ -39,7 +43,7 @@ function Book(title, author, pages, read) {
     this.read = read;
 }
 
-// Function to Rebuild Table
+// Function to Rebuild Grid
 function rebuild() {
     booksDatabase.textContent = '';
     addToDatabase();
@@ -50,7 +54,13 @@ newBookForm.addEventListener('submit', event => {
     event.preventDefault(); // Remove default form behaviour
     addBookToLibrary();
     rebuild();
+    if (!keepOpenCheckbox.checked) {
+        newBookDialog.close();
+        blurBackground.style.display = 'none';
+    }
+    const keepOpenState = keepOpenCheckbox.checked; // Store the checkbox state
     newBookForm.reset();
+    keepOpenCheckbox.checked = keepOpenState; // Restore the checkbox state
 });
 
 // Function to Add New Books to Library
@@ -71,24 +81,36 @@ Book.prototype.readToggle = function () {
 // Function to Add Books from Array to Database
 function addToDatabase() {
     myLibrary.forEach((book, index) => {
-        // Table row starts
-        let tr = document.createElement('tr');
+        let card = document.createElement('div');
+        card.className =
+            'book-card bg-white rounded-lg shadow-md p-6 flex flex-col justify-between';
 
-        // Adding each object's value to a <td>
-        for (let data in book) {
-            if (book.hasOwnProperty(data)) {
-                let td = document.createElement('td');
-                td.textContent = book[data];
-                tr.appendChild(td);
-            }
-        }
+        let content = document.createElement('div');
+        content.innerHTML = `
+            <h3 class="text-xl font-semibold mb-2">${book.title}</h3>
+            <p class="text-gray-600 mb-1">Author: ${book.author}</p>
+            <p class="text-gray-600 mb-1">Pages: ${book.pages}</p>
+            <p class="text-gray-600 mb-4">Read: ${book.read}</p>
+        `;
 
-        // Adding a Toggle Button to <td>
-        let readTd = document.createElement('td');
+        let buttonsContainer = document.createElement('div');
+        buttonsContainer.className = 'flex justify-between';
+
         let readToggleBtn = document.createElement('button');
         readToggleBtn.textContent = 'Change Read Status';
-        readTd.appendChild(readToggleBtn);
-        tr.appendChild(readTd);
+        readToggleBtn.className =
+            'btn bg-blue-500 hover:bg-blue-700 text-white font-bold py-1 px-2 rounded mr-2';
+
+        let delBtn = document.createElement('button');
+        delBtn.textContent = 'Delete';
+        delBtn.className =
+            'btn bg-red-500 hover:bg-red-700 text-white font-bold py-1 px-2 rounded';
+
+        buttonsContainer.appendChild(readToggleBtn);
+        buttonsContainer.appendChild(delBtn);
+
+        card.appendChild(content);
+        card.appendChild(buttonsContainer);
 
         // Adding Event Listener to each Toggle Button
         readToggleBtn.addEventListener('click', () => {
@@ -96,20 +118,13 @@ function addToDatabase() {
             rebuild();
         });
 
-        // Adding a Delete Button to <td>
-        let delTd = document.createElement('td');
-        let delBtn = document.createElement('button');
-        delBtn.textContent = 'Delete';
-        delTd.appendChild(delBtn);
-        tr.appendChild(delTd);
-
         // Adding Event Listener to each Delete Button
         delBtn.addEventListener('click', () => {
             myLibrary.splice(index, 1);
             rebuild();
         });
 
-        // Appending all the elements to the table row
-        booksDatabase.appendChild(tr);
+        // Appending the card to the grid
+        booksDatabase.appendChild(card);
     });
 }
