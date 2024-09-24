@@ -35,12 +35,22 @@ close.addEventListener('click', () => {
     blurBackground.style.display = 'none';
 });
 
-// Book Constructor
-function Book(title, author, pages, read) {
-    this.title = title;
-    this.author = author;
-    this.pages = pages;
-    this.read = read;
+// Book Class
+class Book {
+    constructor(title, author, pages, read) {
+        this.title = title;
+        this.author = author;
+        this.pages = pages;
+        this.read = read;
+    }
+
+    readToggle() {
+        if (this.read === 'Yes') {
+            return (this.read = 'No');
+        } else {
+            return (this.read = 'Yes');
+        }
+    }
 }
 
 // Function to Rebuild Grid
@@ -68,15 +78,6 @@ function addBookToLibrary() {
     let entry = new Book(title.value, author.value, pages.value, readStatus());
     myLibrary.push(entry);
 }
-
-// Read Toggle Prototype
-Book.prototype.readToggle = function () {
-    if (this.read === 'Yes') {
-        return (this.read = 'No');
-    } else {
-        return (this.read = 'Yes');
-    }
-};
 
 // Function to Add Books from Array to Database
 function addToDatabase() {
